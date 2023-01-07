@@ -1,0 +1,37 @@
+image:
+  file: .gitpod.dockerfile
+tasks:
+  - init: npm_config_yes=true pnpm setup:project
+    command: mkdir -p /workspace/data && mongod --dbpath /workspace/data 
+  - command: redis-server
+  - name: Shared Library
+    command: cd libs/shared && pnpm start
+  - name: DAL
+    command: cd libs/dal && pnpm start
+  - name: TESTING LIB
+    command: cd libs/testing && pnpm start
+  - name: API
+    command: cd apps/api && pnpm start
+  - name: WS
+    command: cd apps/ws && pnpm start
+  - name: WEB
+    command: cd apps/web && pnpm start
+ports:
+  - port: 4200
+    onOpen: open-preview
+  - port: 4500
+    onOpen: notify
+  - port: 3000
+    onOpen: notify
+github:
+  prebuilds:
+    # enable for the master/default branch (defaults to true)
+    master: true
+    # enable for all branches in this repo (defaults to false)
+    branches: true
+    # enable for pull requests coming from this repo (defaults to true)
+    pullRequests: true
+    # add a check to pull requests (defaults to true)
+    addCheck: true
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: true
